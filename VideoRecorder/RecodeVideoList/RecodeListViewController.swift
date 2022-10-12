@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 
 final class RecodeListViewController: UIViewController {
 
@@ -39,21 +40,30 @@ final class RecodeListViewController: UIViewController {
         return indicator
     }()
 
-    private var videos: [Video] = []
-    private var isLoading: Bool = false
+    private let imageManager = PHCachingImageManager()
+    private let fetchSize = 6
+
+    private var fetchLimit = 0
+    private var fetchResult: PHFetchResult<PHAsset>!
+    private var isFetching: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupNavigation()
         setupViews()
+        PHPhotoLibrary.shared().register(self)
+        fetchMoreAssets()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        loadMoreData()
         navigationController?.navigationBar.barStyle = .default
+    }
+
+    deinit {
+        PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
 
     private func setupNavigation() {
@@ -85,23 +95,33 @@ final class RecodeListViewController: UIViewController {
         let height = tableView.bounds.size.height
 
         if offsetY > contentHeight - height {
-            if !isLoading {
-                loadMoreData()
+            fetchMoreAssets()
+        }
+    }
+
+    private func fetchMoreAssets() {
+        if !isFetching {
+            isFetching = true
+            fetchLimit += fetchSize
+            activityIndicator.startAnimating()
+
+            fetchAssets(limitedBy: fetchLimit) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.activityIndicator.stopAnimating()
+                    self.tableView.reloadData()
+                    self.isFetching = false
+                }
             }
         }
     }
 
-    private func loadMoreData() {
-        isLoading = true
-        activityIndicator.startAnimating()
-        VideoController.shared.fetch() { 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                //                self.videos = videos
-                self.activityIndicator.stopAnimating()
-                self.tableView.reloadData()
-                self.isLoading = false
-            }
-        }
+
+    private func fetchAssets(limitedBy limit: Int, completion: (() -> Void)?) {
+        let options = PHFetchOptions()
+        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        options.fetchLimit = limit
+        fetchResult = PHAsset.fetchAssets(with: .video, options: options)
+        completion?()
     }
 
     @objc
@@ -112,15 +132,20 @@ final class RecodeListViewController: UIViewController {
 
 extension RecodeListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        VideoController.shared.count
+        fetchResult.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RecodeListCell.reuseIdentifier, for: indexPath) as? RecodeListCell else {
             return UITableViewCell()
         }
-        let video = VideoController.shared.video(at: indexPath.row)
-        cell.configure(with: video)
+        let asset = fetchResult.object(at: indexPath.row)
+        cell.configure(with: asset)
+        imageManager.requestImage(for: asset, targetSize: .zero, contentMode: .aspectFill, options: nil) { image, _ in
+            if cell.representedAssetIdentifier == asset.localIdentifier {
+                cell.thumbnailImageView.image = image
+            }
+        }
         return cell
     }
 }
@@ -129,18 +154,38 @@ extension RecodeListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
 
-        let video = VideoController.shared.video(at: indexPath.row)
-        let viewController = RecodingViewController(with: video)
+        let asset = fetchResult.object(at: indexPath.row)
+        let viewController = PlayBackViewController(with: asset)
         navigationController?.pushViewController(viewController, animated: true)
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let asset = fetchResult.object(at: indexPath.row)
+
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, _ in
             // TODO: 백업된 영상도 삭제합니다.
-            self.videos.remove(at: indexPath.row)
-            tableView.reloadData()
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.deleteAssets([asset] as NSArray)
+            }) { success, error in
+                if success {
+                    print("Remove the asset: \(String(describing: asset.localIdentifier))")
+                } else {
+                    print("Can't remove the asset: \(String(describing: error))")
+                }
+            }
         }
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
+    }
+}
+
+extension RecodeListViewController: PHPhotoLibraryChangeObserver {
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        DispatchQueue.main.sync {
+            guard let details = changeInstance.changeDetails(for: fetchResult) else { return }
+
+            fetchResult = details.fetchResultAfterChanges
+            tableView.reloadData()
+        }
     }
 }

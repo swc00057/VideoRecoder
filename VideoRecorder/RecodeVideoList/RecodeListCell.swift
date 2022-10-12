@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 
 final class RecodeListCell: UITableViewCell {
 
@@ -33,7 +34,7 @@ final class RecodeListCell: UITableViewCell {
         return label
     }()
 
-    private let thumbnailImageView: UIImageView = {
+    let thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 10
         imageView.layer.masksToBounds = true
@@ -67,6 +68,8 @@ final class RecodeListCell: UITableViewCell {
         label.setContentCompressionResistancePriority(.defaultHigh + 1, for: .vertical)
         return label
     }()
+
+    private(set) var representedAssetIdentifier: String!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -105,10 +108,11 @@ final class RecodeListCell: UITableViewCell {
         accessoryType = .disclosureIndicator
     }
 
-    func configure(with video: Video) {
-        titleLabel.text = video.title
-        thumbnailImageView.image = UIImage(named: video.image)
-        durationLabel.text = video.duration
-        dateLabel.text = video.date
+    func configure(with asset: PHAsset) {
+        representedAssetIdentifier = asset.localIdentifier
+        
+        titleLabel.text = representedAssetIdentifier
+        durationLabel.text = asset.duration.displayTime
+        dateLabel.text = asset.creationDate?.string()
     }
 }
