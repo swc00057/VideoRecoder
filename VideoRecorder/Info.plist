@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>영상 라이브러리 보기 기능을 위해 필요합니다</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>동영상 저장을 위함</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>동영상 촬영을 위함</string>
+	<key>NSCameraUsageDescription</key>
+	<string>동영상 촬영을 위함</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
