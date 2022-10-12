@@ -7,9 +7,10 @@
 
 import UIKit
 
-struct Video {
+struct Video: Decodable {
     let title: String
-    let thumbnail: UIImage
     let date: String
+    let image: String
     let duration: String
+    let url: String
 }

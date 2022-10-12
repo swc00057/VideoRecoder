@@ -107,7 +107,7 @@ final class RecodeListCell: UITableViewCell {
 
     func configure(with video: Video) {
         titleLabel.text = video.title
-        thumbnailImageView.image = video.thumbnail
+        thumbnailImageView.image = UIImage(named: video.image)
         durationLabel.text = video.duration
         dateLabel.text = video.date
     }

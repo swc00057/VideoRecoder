@@ -39,8 +39,6 @@ final class RecodeListViewController: UIViewController {
         return indicator
     }()
 
-    private let videoController = VideoController()
-
     private var videos: [Video] = []
     private var isLoading: Bool = false
 
@@ -55,11 +53,13 @@ final class RecodeListViewController: UIViewController {
         super.viewWillAppear(animated)
 
         loadMoreData()
+        navigationController?.navigationBar.barStyle = .default
     }
 
     private func setupNavigation() {
         navigationItem.title = "Video List"
         navigationItem.rightBarButtonItem = recordingButton
+        navigationItem.backButtonDisplayMode = .minimal
         navigationController?.navigationBar.prefersLargeTitles = true
     }
 
@@ -94,9 +94,9 @@ final class RecodeListViewController: UIViewController {
     private func loadMoreData() {
         isLoading = true
         activityIndicator.startAnimating()
-        videoController.fetch() { videos in
+        VideoController.shared.fetch() { 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.videos = videos
+                //                self.videos = videos
                 self.activityIndicator.stopAnimating()
                 self.tableView.reloadData()
                 self.isLoading = false
@@ -112,14 +112,14 @@ final class RecodeListViewController: UIViewController {
 
 extension RecodeListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        videos.count
+        VideoController.shared.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RecodeListCell.reuseIdentifier, for: indexPath) as? RecodeListCell else {
             return UITableViewCell()
         }
-        let video = videos[indexPath.row]
+        let video = VideoController.shared.video(at: indexPath.row)
         cell.configure(with: video)
         return cell
     }
@@ -127,7 +127,11 @@ extension RecodeListViewController: UITableViewDataSource {
 
 extension RecodeListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: 영상을 짧게 누르면 해당 영상을 볼 수 있는 세번째 페이지로 이동합니다.
+        tableView.deselectRow(at: indexPath, animated: false)
+
+        let video = VideoController.shared.video(at: indexPath.row)
+        let viewController = RecodingViewController(with: video)
+        navigationController?.pushViewController(viewController, animated: true)
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
