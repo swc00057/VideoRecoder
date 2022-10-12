@@ -31,13 +31,30 @@ final class RecodeListViewController: UIViewController {
         return button
     }()
 
-    private var videos = Video.sampleData
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        indicator.stopAnimating()
+        return indicator
+    }()
+
+    private let videoController = VideoController()
+
+    private var videos: [Video] = []
+    private var isLoading: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupNavigation()
         setupViews()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        loadMoreData()
     }
 
     private func setupNavigation() {
@@ -48,20 +65,49 @@ final class RecodeListViewController: UIViewController {
 
     private func setupViews() {
         view.addSubview(tableView)
+        view.addSubview(activityIndicator)
 
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
+    }
+
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = tableView.contentOffset.y
+        let contentHeight = tableView.contentSize.height
+        let height = tableView.bounds.size.height
+
+        if offsetY > contentHeight - height {
+            if !isLoading {
+                loadMoreData()
+            }
+        }
+    }
+
+    private func loadMoreData() {
+        isLoading = true
+        activityIndicator.startAnimating()
+        videoController.fetch() { videos in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.videos = videos
+                self.activityIndicator.stopAnimating()
+                self.tableView.reloadData()
+                self.isLoading = false
+            }
+        }
     }
 
     @objc
     private func recordButtonClicked() {
         // TODO: 영상녹화화면으로 이동
     }
-
 }
 
 extension RecodeListViewController: UITableViewDataSource {
@@ -85,8 +131,12 @@ extension RecodeListViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // TODO: 행을 스와이프 하면 삭제할 수 있도록 UI와 UX를 제공합니다.
-        // 백업된 영상도 삭제합니다.
-        return nil
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, _ in
+            // TODO: 백업된 영상도 삭제합니다.
+            self.videos.remove(at: indexPath.row)
+            tableView.reloadData()
+        }
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
     }
 }
