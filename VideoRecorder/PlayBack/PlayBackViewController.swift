@@ -9,7 +9,7 @@ import UIKit
 
 //영상 재생 화면
 class PlayBackViewController: UIViewController {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.

@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let mainVC = RecodeListViewController()
         let navigationController = UINavigationController(rootViewController: mainVC)
         window?.rootViewController = navigationController
+        window?.backgroundColor = .systemBackground
         window?.makeKeyAndVisible()
     }
 
