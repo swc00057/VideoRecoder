@@ -170,8 +170,12 @@ class RecordingViewController: UIViewController {
     private func tempURL() -> URL? {
         let directory = NSTemporaryDirectory() as NSString
         
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd-HH:mm:ss"
+        let date = formatter.string(from: Date())
+        
         if directory != "" {
-            let path = directory.appendingPathComponent(NSUUID().uuidString + ".mp4")
+            let path = directory.appendingPathComponent("MyVideo-" + date + ".mp4")
             return URL(fileURLWithPath: path)
         }
         
@@ -224,6 +228,9 @@ extension RecordingViewController: AVCaptureFileOutputRecordingDelegate, PHPhoto
             print("Error recording movie: \(error!.localizedDescription)")
         } else {
             let videoRecorded = outputURL! as URL
+            DispatchQueue.global(qos: .background).async {
+                FirebaseStorage.shared.upload(url: videoRecorded)
+            }
             UISaveVideoAtPathToSavedPhotosAlbum(videoRecorded.path, nil, nil, nil)
         }
     }

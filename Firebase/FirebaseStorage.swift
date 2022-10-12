@@ -13,28 +13,28 @@ class FirebaseStorage {
     let storage = Storage.storage()
     
     //TEST CODE
-    func upload() {
+    func upload(url: URL) {
         // Create a root reference
         let storageRef = storage.reference()
         
         // Create a reference to 'images/테스트이미지.jpg'
-        let testImagesRef = storageRef.child("images/테스트이미지.jpg")
+        let testImagesRef = storageRef.child("videos/" + url.lastPathComponent)
         
         // Data in memory
         var data = Data()
-        data = UIImage(named: "01")!.jpegData(compressionQuality: 1)!
+        data = try! Data(contentsOf: url)
         
         // Upload the file to the path "images/테스트이미지.jpg"
         let metadata = StorageMetadata()
-        metadata.contentType = "image/jpeg"
+        metadata.contentType = "video/mp4"
         testImagesRef.putData(data, metadata: metadata) { (metadata, error) in
-            print(error)
+            //print(error)
             guard let metadata = metadata else {
                 // Uh-oh, an error occurred!
                 return
             }
             // Metadata contains file metadata such as size, content-type.
-            print(metadata)
+            //print(metadata)
             // You can also access to download URL after upload.
             testImagesRef.downloadURL { (url, error) in
                 guard let downloadURL = url else {
