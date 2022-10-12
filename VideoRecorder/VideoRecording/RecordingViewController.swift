@@ -15,8 +15,7 @@ class RecordingViewController: UIViewController {
     let mainView = RecordingView()
     let captureSession = AVCaptureSession()
     var videoDevice: AVCaptureDevice!
-    var videoInput: AVCaptureDeviceInput!
-    var audioInput: AVCaptureDeviceInput!
+    var audioDevice: AVCaptureDevice!
     var videoOutput: AVCaptureMovieFileOutput!
     var outputURL: URL?
     
@@ -86,10 +85,15 @@ class RecordingViewController: UIViewController {
         captureSession.beginConfiguration()
         
         //input 디바이스 선택 , 어떤 카메라를 쓸거야?
-        let videoDevice = bestDevice(in: .back) //기본은 back 포지션 카메라
+        videoDevice = bestDevice(in: .back) //기본은 back 포지션 카메라
         //카메라 디바이스 유무 확인, session에 input 할 수 있는지 확인
         guard let videoDeviceInput = try? AVCaptureDeviceInput(device: videoDevice), captureSession.canAddInput(videoDeviceInput) else { return }
         captureSession.addInput(videoDeviceInput)
+        
+        //오디오 디바이스 input
+        audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
+        guard let audioDeviceInput = try? AVCaptureDeviceInput(device: audioDevice), captureSession.canAddInput(audioDeviceInput) else { return }
+        captureSession.addInput(audioDeviceInput)
         //output 선택 어디로 출력 할거야?
         videoOutput = AVCaptureMovieFileOutput()
         guard captureSession.canAddOutput(videoOutput) else { return }
@@ -131,10 +135,11 @@ class RecordingViewController: UIViewController {
     //카메라 포지션 변경 back -> front , front -> back
     @objc func changeCamera() {
         captureSession.beginConfiguration()
-        guard let input = captureSession.inputs.first as? AVCaptureDeviceInput else { return }
+        guard let videoInput = captureSession.inputs[0] as? AVCaptureDeviceInput else { return }
+        guard let audioInput = captureSession.inputs[1] as? AVCaptureDeviceInput else { return }
         
         var afterPosition: AVCaptureDevice.Position = .unspecified
-        let position = input.device.position
+        let position = videoInput.device.position
         
         if position == .back {
             afterPosition = .front
@@ -144,8 +149,12 @@ class RecordingViewController: UIViewController {
         let videoDevice = bestDevice(in: afterPosition)
         //이미 세션이 존재해 canAddInput는 항상 false 이기 때문에 세션 변경 시에는 예외처리를 하지 않는다
         guard let videoDeviceInput = try? AVCaptureDeviceInput(device: videoDevice) else { return }
-        captureSession.removeInput(input)
+        guard let audioDeviceInput = try? AVCaptureDeviceInput(device: audioDevice) else { return }
+        
+        captureSession.removeInput(videoInput)
         captureSession.addInput(videoDeviceInput)
+        captureSession.removeInput(audioInput)
+        captureSession.addInput(audioDeviceInput)
         
         captureSession.commitConfiguration()
         
