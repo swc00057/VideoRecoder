@@ -16,6 +16,7 @@
 		0BC8E25428F4968D002B0FA3 /* RecodeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25328F4968D002B0FA3 /* RecodeListViewController.swift */; };
 		0BC8E25728F49724002B0FA3 /* RecordingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25628F49724002B0FA3 /* RecordingViewController.swift */; };
 		0BC8E25A28F497C2002B0FA3 /* PlayBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */; };
+		0BCA5FA628F83CCB003B97B1 /* Double+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA5FA528F83CCB003B97B1 /* Double+extension.swift */; };
 		5D01E6DC28F721DD000A7E6F /* Foundation+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6DB28F721DD000A7E6F /* Foundation+.swift */; };
 		5D01E6DE28F7EFB9000A7E6F /* PhotoKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6DD28F7EFB9000A7E6F /* PhotoKit+.swift */; };
 		5D01E6E228F7F85E000A7E6F /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6E128F7F85E000A7E6F /* PaddingLabel.swift */; };
@@ -37,6 +38,7 @@
 		0BC8E25328F4968D002B0FA3 /* RecodeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecodeListViewController.swift; sourceTree = "<group>"; };
 		0BC8E25628F49724002B0FA3 /* RecordingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingViewController.swift; sourceTree = "<group>"; };
 		0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayBackViewController.swift; sourceTree = "<group>"; };
+		0BCA5FA528F83CCB003B97B1 /* Double+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+extension.swift"; sourceTree = "<group>"; };
 		5D01E6DB28F721DD000A7E6F /* Foundation+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+.swift"; sourceTree = "<group>"; };
 		5D01E6DD28F7EFB9000A7E6F /* PhotoKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhotoKit+.swift"; sourceTree = "<group>"; };
 		5D01E6E128F7F85E000A7E6F /* PaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
@@ -105,6 +107,14 @@
 			path = PlayBack;
 			sourceTree = "<group>";
 		};
+		0BCA5FA428F83BE1003B97B1 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				0B1A474128F62F0B008D44C5 /* Double+extension.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		5D01E6E028F7F852000A7E6F /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -119,16 +129,9 @@
 				5DC1257128F6AD6B004B2BFC /* UIKit+.swift */,
 				5D01E6DB28F721DD000A7E6F /* Foundation+.swift */,
 				5D01E6DD28F7EFB9000A7E6F /* PhotoKit+.swift */,
+				0BCA5FA528F83CCB003B97B1 /* Double+extension.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		0BCA5FA328F83B21003B97B1 /* Extenstions */ = {
-			isa = PBXGroup;
-			children = (
-				0B1A474128F62F0B008D44C5 /* Double+extension.swift */,
-			);
-			path = Extenstions;
 			sourceTree = "<group>";
 		};
 		6321036B28F06E7200CC1609 = {
@@ -138,6 +141,7 @@
 				0BC8E24F28F492D4002B0FA3 /* Firebase */,
 				6321037628F06E7200CC1609 /* VideoRecorder */,
 				6321037528F06E7200CC1609 /* Products */,
+				0BCA5FA428F83BE1003B97B1 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -249,6 +253,7 @@
 				0B1A474528F638B3008D44C5 /* ImageManager.swift in Sources */,
 				5D01E6E228F7F85E000A7E6F /* PaddingLabel.swift in Sources */,
 				0BC8E25428F4968D002B0FA3 /* RecodeListViewController.swift in Sources */,
+				0BCA5FA628F83CCB003B97B1 /* Double+extension.swift in Sources */,
 				5DC1257228F6AD6B004B2BFC /* UIKit+.swift in Sources */,
 				0BC8E25A28F497C2002B0FA3 /* PlayBackViewController.swift in Sources */,
 				5D01E6DC28F721DD000A7E6F /* Foundation+.swift in Sources */,
