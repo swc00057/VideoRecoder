@@ -21,6 +21,8 @@ class RecordingViewController: UIViewController {
     
     var timer: Timer?
     var timeCount = 0
+    var albumTitle = "MyVideos"
+    var myAlbum: PHAssetCollection!
     
     override func loadView() {
         self.view = mainView
@@ -51,9 +53,22 @@ class RecordingViewController: UIViewController {
         let albumGesture = UITapGestureRecognizer(target: self, action: #selector(albumButtonClicked))
         mainView.albumButton.addGestureRecognizer(albumGesture)
         
-        self.requestPHPhotoLibraryAuthorization {
-            self.makeAlbumImage()
+        DispatchQueue.main.async {
+            self.requestPHPhotoLibraryAuthorization {
+                //사진앨범 권한이 있을 경우
+                if let album = self.searchMyAlbum() {
+                    //앨범이 존재할때
+                    self.myAlbum = album
+                    self.makeAlbumImage()
+                } else {
+                    //앨범이 존재하지 않을때
+                    self.createAlbum()
+                    self.makeAlbumImage()
+                }
+                
+            }
         }
+        
     }
     
     //버튼 클릭 시 isEnabled 값을 변경 true <-> false, 값에 따라 녹화 시작 or 종료
@@ -209,17 +224,53 @@ class RecordingViewController: UIViewController {
         let fetchOption = PHFetchOptions()
         fetchOption.fetchLimit = 1
         fetchOption.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        let fetchPhotos = PHAsset.fetchAssets(with: .video, options: fetchOption)
+        let fetchPhotos = PHAsset.fetchAssets(in: myAlbum, options: fetchOption)
         if let photo = fetchPhotos.firstObject {
             DispatchQueue.main.async {
                 ImageManager.shared.requestImage(from: photo, thumnailSize: self.mainView.albumButton.frame.size) { image in
                     self.mainView.albumButton.image = image
                 }
-           }
+            }
         } else {
-            // 사진이 없을 때, 디폴트 이미지 지정
+            // 사진이 없을 때, 디폴트 이미지 지정, 앨범생성
             self.mainView.albumButton.image = UIImage(systemName: "photo")
         }
+    }
+    
+    //비디오 저장용 앨범 생성
+    private func createAlbum() {
+        PHPhotoLibrary.shared().performChanges({
+            PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: self.albumTitle)
+        }) { success, error in
+            if success {
+                self.myAlbum = self.searchMyAlbum()
+            } else {
+                print("error \(String(describing: error))")
+            }
+        }
+    }
+    
+    //녹화된 비디오 저장
+    private func saveVideo(url: URL) {
+        PHPhotoLibrary.shared().performChanges({
+            guard let album = self.myAlbum else { return }
+            let assetChangeRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)!
+            let assetPlaceHolder = assetChangeRequest.placeholderForCreatedAsset
+            let albumChangeRequest = PHAssetCollectionChangeRequest(for: album)// - 내가 만든 앨범(PHAssetCollection)
+            let enumeration: NSArray = [assetPlaceHolder!]
+            albumChangeRequest!.addAssets(enumeration)
+        }) { (success, error) in
+            
+        }
+    }
+    //앨범이 존재하면 찾은 앨범을 return
+    private func searchMyAlbum() -> PHAssetCollection? {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "title = %@", albumTitle)
+        let collection = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+        
+        guard let album: AnyObject = collection.firstObject else { return nil }
+        return album as? PHAssetCollection
     }
 }
 
@@ -236,11 +287,10 @@ extension RecordingViewController: AVCaptureFileOutputRecordingDelegate, PHPhoto
         if (error != nil) {
             print("Error recording movie: \(error!.localizedDescription)")
         } else {
-            let videoRecorded = outputURL! as URL
             DispatchQueue.global(qos: .background).async {
-                FirebaseStorage.shared.upload(url: videoRecorded)
+                FirebaseStorage.shared.upload(url: outputFileURL)
             }
-            UISaveVideoAtPathToSavedPhotosAlbum(videoRecorded.path, nil, nil, nil)
+            saveVideo(url: outputFileURL)
         }
     }
     
