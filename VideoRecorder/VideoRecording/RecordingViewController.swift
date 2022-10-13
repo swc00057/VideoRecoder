@@ -35,12 +35,9 @@ class RecordingViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        //뷰가 모두 보여진 뒤 세션 run
-        if !captureSession.isRunning {
-            captureSession.startRunning()
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.requestCameraAuthorization()
     }
     
     func setupView() {
@@ -206,6 +203,48 @@ class RecordingViewController: UIViewController {
         return nil
     }
     
+    //카메라 권한 요청
+    func requestCameraAuthorization() {
+        AVCaptureDevice.requestAccess(for: .video, completionHandler: { (status: Bool) in
+            if status {
+                print("Camera: 권한 허용")
+                DispatchQueue.main.async {
+                    self.mainView.recordButton.isUserInteractionEnabled = true
+                    self.mainView.cameraRotateButton.isUserInteractionEnabled = true
+                }
+                self.requestAudioAuthorization()
+                
+            } else {
+                print("Camera: 권한 거부")
+                DispatchQueue.main.async {
+                    self.mainView.recordButton.isUserInteractionEnabled = false
+                    self.mainView.cameraRotateButton.isUserInteractionEnabled = false
+                    self.goToSetting()
+                }
+                
+            }
+        })
+    }
+    
+    //오디오 권한 요청
+        func requestAudioAuthorization() {
+            AVCaptureDevice.requestAccess(for: .audio, completionHandler: { (status: Bool) in
+                if status {
+                    print("audio: 권한 허용")
+                    if !self.captureSession.isRunning {
+                        self.captureSession.startRunning()
+                    }
+                } else {
+                    print("audio: 권한 거부")
+                    DispatchQueue.main.async {
+                        self.mainView.recordButton.isUserInteractionEnabled = false
+                        self.mainView.cameraRotateButton.isUserInteractionEnabled = false
+                        self.goToSetting()
+                    }
+                }
+            })
+        }
+    
     //PHPhotoLibrary 권한 요청
     private func requestPHPhotoLibraryAuthorization(completion: @escaping () -> Void) {
         PHPhotoLibrary.requestAuthorization(for: .readWrite) { (status) in
@@ -213,10 +252,37 @@ class RecordingViewController: UIViewController {
             case .authorized:
                 PHPhotoLibrary.shared().register(self)
                 completion()
+            case .denied:
+                DispatchQueue.main.async {
+                    self.mainView.albumButton.isUserInteractionEnabled = false
+                    self.goToSetting()
+                }
             default:
                 break
             }
         }
+    }
+    
+    //권한이 필요할 시 요청 알림 후 설정 화면으로 전환
+    private func goToSetting() {
+        let alert = UIAlertController(title: "권한 요청", message: "관련 권한을 허용해주세요", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
+            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            }
+        }))
+        
+        //권한 요청 알림창 취소 시 앱종료
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { _ in
+            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                exit(0)
+            }
+        }))
+        
+        self.present(alert, animated: true)
+        
     }
     
     //최근 동영상의 미리보기 이미지를 읽어와 image로 넣어준다
