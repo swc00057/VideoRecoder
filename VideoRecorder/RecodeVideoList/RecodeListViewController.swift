@@ -41,18 +41,23 @@ final class RecodeListViewController: UIViewController {
     }()
 
     private let imageManager = PHCachingImageManager()
+    private let albumTitle = "MyVideos"
     private let fetchSize = 6
 
     private var fetchLimit = 0
-    private var fetchResult: PHFetchResult<PHAsset>!
+    private var fetchResult: PHFetchResult<PHAsset>?
     private var isFetching: Bool = false
+    private var album: PHAssetCollection?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupNavigation()
         setupViews()
-        fetchMoreAssets()
+        fetchAssetCollection(for: albumTitle) {
+            guard let album = self.album else { return }
+            self.fetchMoreAssets(in: album)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,12 +71,14 @@ final class RecodeListViewController: UIViewController {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let album = album else { return }
+
         let offsetY = tableView.contentOffset.y
         let contentHeight = tableView.contentSize.height
         let height = tableView.bounds.size.height
 
         if offsetY > contentHeight - height {
-            fetchMoreAssets()
+            fetchMoreAssets(in: album)
         }
     }
 
@@ -97,13 +104,27 @@ final class RecodeListViewController: UIViewController {
         ])
     }
 
-    private func fetchMoreAssets() {
+
+    /// Fetching Asset Collection for specific `albumTitle`
+    private func fetchAssetCollection(
+        for albumTitle: String,
+        completion: (() -> Void)?
+    ) {
+        let options = PHFetchOptions()
+        options.predicate = NSPredicate(format: "title = %@", albumTitle)
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: options)
+        album = assetCollections.firstObject
+        completion?()
+    }
+
+    /// Fetching Assets by Page in `assetCollection`
+    private func fetchMoreAssets(in assetCollection: PHAssetCollection) {
         if !isFetching {
             isFetching = true
             fetchLimit += fetchSize
             activityIndicator.startAnimating()
 
-            fetchAssets(limitedBy: fetchLimit) {
+            fetchAssets(in: assetCollection, limitedBy: fetchLimit) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.activityIndicator.stopAnimating()
                     self.tableView.reloadData()
@@ -113,11 +134,16 @@ final class RecodeListViewController: UIViewController {
         }
     }
 
-    private func fetchAssets(limitedBy limit: Int, completion: (() -> Void)?) {
+    /// Fetching up to `limit` Assets in `assetCollection`
+    private func fetchAssets(
+        in assetCollection: PHAssetCollection,
+        limitedBy limit: Int,
+        completion: (() -> Void)?
+    ) {
         let options = PHFetchOptions()
-        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         options.fetchLimit = limit
-        fetchResult = PHAsset.fetchAssets(with: .video, options: options)
+        fetchResult = PHAsset.fetchAssets(in: assetCollection, options: options)
         completion?()
     }
 
@@ -133,16 +159,18 @@ final class RecodeListViewController: UIViewController {
 
 extension RecodeListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        fetchResult.count
+        fetchResult?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RecodeListCell.reuseIdentifier, for: indexPath) as? RecodeListCell else {
             return UITableViewCell()
         }
-        let asset = fetchResult.object(at: indexPath.row)
+        guard let asset = fetchResult?.object(at: indexPath.row) else { return cell }
+
         cell.configure(with: asset)
-        imageManager.requestImage(for: asset, targetSize: .zero, contentMode: .aspectFill, options: nil) { image, _ in
+        let size = CGSize(width: 100, height: 100)
+        imageManager.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: nil) { image, _ in
             if cell.representedAssetIdentifier == asset.localIdentifier {
                 cell.thumbnailImageView.image = image
             }
@@ -157,13 +185,14 @@ extension RecodeListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
 
-        let asset = fetchResult.object(at: indexPath.row)
+        guard let asset = fetchResult?.object(at: indexPath.row) else { return }
+
         let viewController = PlayBackViewController(with: asset)
         navigationController?.pushViewController(viewController, animated: true)
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let asset = fetchResult.object(at: indexPath.row)
+        guard let asset = fetchResult?.object(at: indexPath.row) else { return nil }
 
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, _ in
             // TODO: 백업된 영상도 삭제합니다.
@@ -182,7 +211,8 @@ extension RecodeListViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let asset = fetchResult.object(at: indexPath.row)
+        guard let asset = fetchResult?.object(at: indexPath.row) else { return nil }
+
         let assetIdentifier = asset.localIdentifier as NSCopying
         let viewController = PlayBackViewController(with: asset)
         let configuration = UIContextMenuConfiguration(
@@ -199,10 +229,11 @@ extension RecodeListViewController: UITableViewDelegate {
 extension RecodeListViewController: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         DispatchQueue.main.sync {
-            guard let details = changeInstance.changeDetails(for: fetchResult) else { return }
+            guard let fetchResult = self.fetchResult,
+                  let details = changeInstance.changeDetails(for: fetchResult) else { return }
 
-            fetchResult = details.fetchResultAfterChanges
-            tableView.reloadData()
+            self.fetchResult = details.fetchResultAfterChanges
+            self.tableView.reloadData()
         }
     }
 }
