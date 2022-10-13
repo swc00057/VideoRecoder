@@ -52,11 +52,16 @@ final class RecodeListViewController: UIViewController {
 
         setupNavigation()
         setupViews()
-        PHPhotoLibrary.shared().register(self)
         fetchMoreAssets()
     }
-
-    deinit {
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        PHPhotoLibrary.shared().register(self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
 
@@ -119,6 +124,8 @@ final class RecodeListViewController: UIViewController {
     @objc
     private func recordButtonClicked() {
         // TODO: 영상녹화화면으로 이동
+        let vc = RecordingViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

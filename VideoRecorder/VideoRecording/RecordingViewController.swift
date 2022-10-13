@@ -39,6 +39,10 @@ class RecordingViewController: UIViewController {
         super.viewWillAppear(animated)
         self.requestCameraAuthorization()
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        PHPhotoLibrary.shared().unregisterChangeObserver(self)
+    }
     
     func setupView() {
         //videoPreviewLayer의 session을 사용자 지정 세션으로 지정
@@ -60,7 +64,6 @@ class RecordingViewController: UIViewController {
                 } else {
                     //앨범이 존재하지 않을때
                     self.createAlbum()
-                    self.makeAlbumImage()
                 }
                 
             }
@@ -227,23 +230,23 @@ class RecordingViewController: UIViewController {
     }
     
     //오디오 권한 요청
-        func requestAudioAuthorization() {
-            AVCaptureDevice.requestAccess(for: .audio, completionHandler: { (status: Bool) in
-                if status {
-                    print("audio: 권한 허용")
-                    if !self.captureSession.isRunning {
-                        self.captureSession.startRunning()
-                    }
-                } else {
-                    print("audio: 권한 거부")
-                    DispatchQueue.main.async {
-                        self.mainView.recordButton.isUserInteractionEnabled = false
-                        self.mainView.cameraRotateButton.isUserInteractionEnabled = false
-                        self.goToSetting()
-                    }
+    func requestAudioAuthorization() {
+        AVCaptureDevice.requestAccess(for: .audio, completionHandler: { (status: Bool) in
+            if status {
+                print("audio: 권한 허용")
+                if !self.captureSession.isRunning {
+                    self.captureSession.startRunning()
                 }
-            })
-        }
+            } else {
+                print("audio: 권한 거부")
+                DispatchQueue.main.async {
+                    self.mainView.recordButton.isUserInteractionEnabled = false
+                    self.mainView.cameraRotateButton.isUserInteractionEnabled = false
+                    self.goToSetting()
+                }
+            }
+        })
+    }
     
     //PHPhotoLibrary 권한 요청
     private func requestPHPhotoLibraryAuthorization(completion: @escaping () -> Void) {
@@ -299,7 +302,9 @@ class RecordingViewController: UIViewController {
             }
         } else {
             // 사진이 없을 때, 디폴트 이미지 지정, 앨범생성
-            self.mainView.albumButton.image = UIImage(systemName: "photo")
+            DispatchQueue.main.async {
+                self.mainView.albumButton.image = UIImage(systemName: "photo")
+            }
         }
     }
     
@@ -310,6 +315,7 @@ class RecordingViewController: UIViewController {
         }) { success, error in
             if success {
                 self.myAlbum = self.searchMyAlbum()
+                self.makeAlbumImage()
             } else {
                 print("error \(String(describing: error))")
             }

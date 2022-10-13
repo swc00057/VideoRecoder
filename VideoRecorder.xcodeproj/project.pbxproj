@@ -30,7 +30,6 @@
 
 /* Begin PBXFileReference section */
 		0B1A473F28F62C2A008D44C5 /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
-		0B1A474128F62F0B008D44C5 /* Double+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+extension.swift"; sourceTree = "<group>"; };
 		0B1A474428F638B3008D44C5 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		0B8429F728F4828E00723AD4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0BC8E25028F4930C002B0FA3 /* FirebaseStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorage.swift; sourceTree = "<group>"; };
@@ -106,14 +105,6 @@
 			path = PlayBack;
 			sourceTree = "<group>";
 		};
-		0BCA5FA428F83BE1003B97B1 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				0B1A474128F62F0B008D44C5 /* Double+extension.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		5D01E6E028F7F852000A7E6F /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,7 +131,6 @@
 				0BC8E24F28F492D4002B0FA3 /* Firebase */,
 				6321037628F06E7200CC1609 /* VideoRecorder */,
 				6321037528F06E7200CC1609 /* Products */,
-				0BCA5FA428F83BE1003B97B1 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
