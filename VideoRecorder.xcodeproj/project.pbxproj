@@ -14,6 +14,7 @@
 		0BC8E25728F49724002B0FA3 /* RecodingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25628F49724002B0FA3 /* RecodingViewController.swift */; };
 		0BC8E25A28F497C2002B0FA3 /* PlayBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */; };
 		5D01E6DC28F721DD000A7E6F /* Foundation+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6DB28F721DD000A7E6F /* Foundation+.swift */; };
+		5D01E6E228F7F85E000A7E6F /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6E128F7F85E000A7E6F /* PaddingLabel.swift */; };
 		5DC1255C28F54F3F004B2BFC /* RecodeListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1255B28F54F3F004B2BFC /* RecodeListCell.swift */; };
 		5DC1257228F6AD6B004B2BFC /* UIKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1257128F6AD6B004B2BFC /* UIKit+.swift */; };
 		6321037828F06E7200CC1609 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6321037728F06E7200CC1609 /* AppDelegate.swift */; };
@@ -30,6 +31,7 @@
 		0BC8E25628F49724002B0FA3 /* RecodingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecodingViewController.swift; sourceTree = "<group>"; };
 		0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayBackViewController.swift; sourceTree = "<group>"; };
 		5D01E6DB28F721DD000A7E6F /* Foundation+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+.swift"; sourceTree = "<group>"; };
+		5D01E6E128F7F85E000A7E6F /* PaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
 		5DC1255B28F54F3F004B2BFC /* RecodeListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecodeListCell.swift; sourceTree = "<group>"; };
 		5DC1257128F6AD6B004B2BFC /* UIKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+.swift"; sourceTree = "<group>"; };
 		6321037428F06E7200CC1609 /* VideoRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,6 +88,14 @@
 			path = PlayBack;
 			sourceTree = "<group>";
 		};
+		5D01E6E028F7F852000A7E6F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5D01E6E128F7F85E000A7E6F /* PaddingLabel.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		5DC1256A28F6911C004B2BFC /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -118,6 +128,7 @@
 				0BC8E25228F49612002B0FA3 /* RecodeVideoList */,
 				0BC8E25528F496E8002B0FA3 /* VideoRecording */,
 				0BC8E25828F49779002B0FA3 /* PlayBack */,
+				5D01E6E028F7F852000A7E6F /* Views */,
 				5DC1256A28F6911C004B2BFC /* Extensions */,
 				6321037728F06E7200CC1609 /* AppDelegate.swift */,
 				6321037928F06E7200CC1609 /* SceneDelegate.swift */,
@@ -207,6 +218,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D01E6E228F7F85E000A7E6F /* PaddingLabel.swift in Sources */,
 				0BC8E25428F4968D002B0FA3 /* RecodeListViewController.swift in Sources */,
 				5DC1257228F6AD6B004B2BFC /* UIKit+.swift in Sources */,
 				0BC8E25A28F497C2002B0FA3 /* PlayBackViewController.swift in Sources */,

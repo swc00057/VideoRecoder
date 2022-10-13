@@ -17,13 +17,14 @@ final class RecodeListCell: UITableViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.distribution = .fill
-        stackView.alignment = .center // TODO: 두 열 중 길이가 짧은 열의 아래쪽으로 새로운 영상을 배치합니다.
+        stackView.alignment = .bottom // TODO: 두 열 중 길이가 짧은 열의 아래쪽으로 새로운 영상을 배치합니다.
         stackView.spacing = 8
         return stackView
     }()
 
     private let durationLabel: UILabel = {
-        let label = UILabel()
+        let inset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+        let label = PaddingLabel(padding: inset)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .caption1)
         label.textColor = .systemBackground
@@ -38,7 +39,6 @@ final class RecodeListCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 10
         imageView.layer.masksToBounds = true
-        imageView.image = UIImage(systemName: "rectangle.fill")
         return imageView
     }()
 
@@ -91,18 +91,19 @@ final class RecodeListCell: UITableViewCell {
         labelStackView.addArrangedSubview(titleLabel)
         labelStackView.addArrangedSubview(dateLabel)
 
-        let inset: CGFloat = 20
+        let containerViewInset: CGFloat = 20
+        let durationLabelInset: CGFloat = 4
         NSLayoutConstraint.activate([
-            containerStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: inset),
-            containerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
-            containerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
-            containerStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -inset),
+            containerStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: containerViewInset),
+            containerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: containerViewInset),
+            containerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -containerViewInset),
+            containerStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -containerViewInset),
 
             thumbnailImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.25),
             thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: 0.75),
 
-            durationLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.leadingAnchor, constant: 8),
-            durationLabel.bottomAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor, constant: -8),
+            durationLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.leadingAnchor, constant: durationLabelInset),
+            durationLabel.bottomAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor, constant: -durationLabelInset),
         ])
 
         accessoryType = .disclosureIndicator
