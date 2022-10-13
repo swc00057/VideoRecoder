@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0B1A474028F62C2A008D44C5 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1A473F28F62C2A008D44C5 /* RecordingView.swift */; };
-		0B1A474228F62F0B008D44C5 /* Double+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1A474128F62F0B008D44C5 /* Double+extension.swift */; };
 		0B1A474528F638B3008D44C5 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1A474428F638B3008D44C5 /* ImageManager.swift */; };
 		0B8429F828F4828E00723AD4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B8429F728F4828E00723AD4 /* GoogleService-Info.plist */; };
 		0B842A0528F4883A00723AD4 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0B842A0428F4883A00723AD4 /* FirebaseStorage */; };
@@ -249,7 +248,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B1A474228F62F0B008D44C5 /* Double+extension.swift in Sources */,
 				0B1A474528F638B3008D44C5 /* ImageManager.swift in Sources */,
 				5D01E6E228F7F85E000A7E6F /* PaddingLabel.swift in Sources */,
 				0BC8E25428F4968D002B0FA3 /* RecodeListViewController.swift in Sources */,
