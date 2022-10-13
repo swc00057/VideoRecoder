@@ -60,6 +60,16 @@ final class RecodeListViewController: UIViewController {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
 
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = tableView.contentOffset.y
+        let contentHeight = tableView.contentSize.height
+        let height = tableView.bounds.size.height
+
+        if offsetY > contentHeight - height {
+            fetchMoreAssets()
+        }
+    }
+
     private func setupNavigation() {
         navigationItem.title = "Video List"
         navigationItem.rightBarButtonItem = recordingButton
@@ -82,17 +92,6 @@ final class RecodeListViewController: UIViewController {
         ])
     }
 
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = tableView.contentOffset.y
-        let contentHeight = tableView.contentSize.height
-        let height = tableView.bounds.size.height
-
-        if offsetY > contentHeight - height {
-            fetchMoreAssets()
-        }
-    }
-
     private func fetchMoreAssets() {
         if !isFetching {
             isFetching = true
@@ -109,7 +108,6 @@ final class RecodeListViewController: UIViewController {
         }
     }
 
-
     private func fetchAssets(limitedBy limit: Int, completion: (() -> Void)?) {
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
@@ -123,6 +121,8 @@ final class RecodeListViewController: UIViewController {
         // TODO: 영상녹화화면으로 이동
     }
 }
+
+// MARK: - UITableViewDataSource
 
 extension RecodeListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -143,6 +143,8 @@ extension RecodeListViewController: UITableViewDataSource {
         return cell
     }
 }
+
+// MARK: - UITableViewDelegate
 
 extension RecodeListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -184,6 +186,8 @@ extension RecodeListViewController: UITableViewDelegate {
         return configuration
     }
 }
+
+// MARK: - PHPhotoLibraryChangeObserver
 
 extension RecodeListViewController: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {

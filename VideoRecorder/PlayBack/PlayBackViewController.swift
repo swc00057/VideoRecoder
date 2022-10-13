@@ -9,8 +9,7 @@ import UIKit
 import Photos
 import AVKit
 
-//영상 재생 화면
-class PlayBackViewController: UIViewController {
+final class PlayBackViewController: UIViewController {
 
     private let player = AVPlayer()
     private let asset: PHAsset
@@ -19,6 +18,9 @@ class PlayBackViewController: UIViewController {
         let controller = AVPlayerViewController()
         controller.allowsPictureInPicturePlayback = true
         controller.player = player
+        controller.videoGravity = .resizeAspectFill
+        controller.allowsPictureInPicturePlayback = false
+        controller.updatesNowPlayingInfoCenter = false
         return controller
     }()
 
@@ -32,23 +34,30 @@ class PlayBackViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { avAsset, _, _ in
-            guard let avAsset = avAsset else { return }
-            let playerItem = AVPlayerItem(asset: avAsset)
-            self.player.replaceCurrentItem(with: playerItem)
-        }
+        setupPlayer()
         setupNavigation()
         setupViews()
-        //        player.play()
+
+        player.play()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
         player.pause()
+    }
+
+    private func setupPlayer() {
+        PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { avAsset, _, _ in
+            guard let avAsset = avAsset else { return }
+            let playerItem = AVPlayerItem(asset: avAsset)
+            self.player.replaceCurrentItem(with: playerItem)
+        }
     }
 
     private func setupViews() {
@@ -59,7 +68,7 @@ class PlayBackViewController: UIViewController {
         playerView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            playerView.topAnchor.constraint(equalTo: view.topAnchor),
+            playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -69,7 +78,6 @@ class PlayBackViewController: UIViewController {
     private func setupNavigation() {
         navigationItem.title = asset.originalFilename
         navigationItem.largeTitleDisplayMode = .never
-        navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .label
     }
 }
