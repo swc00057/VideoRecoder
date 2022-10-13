@@ -15,7 +15,7 @@
 		0BC8E25A28F497C2002B0FA3 /* PlayBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */; };
 		5D01E6DC28F721DD000A7E6F /* Foundation+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6DB28F721DD000A7E6F /* Foundation+.swift */; };
 		5DC1255C28F54F3F004B2BFC /* RecodeListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1255B28F54F3F004B2BFC /* RecodeListCell.swift */; };
-		5DC1257228F6AD6B004B2BFC /* UIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1257128F6AD6B004B2BFC /* UIViewController+.swift */; };
+		5DC1257228F6AD6B004B2BFC /* UIKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1257128F6AD6B004B2BFC /* UIKit+.swift */; };
 		6321037828F06E7200CC1609 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6321037728F06E7200CC1609 /* AppDelegate.swift */; };
 		6321037A28F06E7200CC1609 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6321037928F06E7200CC1609 /* SceneDelegate.swift */; };
 		6321037C28F06E7200CC1609 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6321037B28F06E7200CC1609 /* ViewController.swift */; };
@@ -31,7 +31,7 @@
 		0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayBackViewController.swift; sourceTree = "<group>"; };
 		5D01E6DB28F721DD000A7E6F /* Foundation+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+.swift"; sourceTree = "<group>"; };
 		5DC1255B28F54F3F004B2BFC /* RecodeListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecodeListCell.swift; sourceTree = "<group>"; };
-		5DC1257128F6AD6B004B2BFC /* UIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+.swift"; sourceTree = "<group>"; };
+		5DC1257128F6AD6B004B2BFC /* UIKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+.swift"; sourceTree = "<group>"; };
 		6321037428F06E7200CC1609 /* VideoRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6321037728F06E7200CC1609 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6321037928F06E7200CC1609 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -89,7 +89,7 @@
 		5DC1256A28F6911C004B2BFC /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				5DC1257128F6AD6B004B2BFC /* UIViewController+.swift */,
+				5DC1257128F6AD6B004B2BFC /* UIKit+.swift */,
 				5D01E6DB28F721DD000A7E6F /* Foundation+.swift */,
 			);
 			path = Extensions;
@@ -208,7 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BC8E25428F4968D002B0FA3 /* RecodeListViewController.swift in Sources */,
-				5DC1257228F6AD6B004B2BFC /* UIViewController+.swift in Sources */,
+				5DC1257228F6AD6B004B2BFC /* UIKit+.swift in Sources */,
 				0BC8E25A28F497C2002B0FA3 /* PlayBackViewController.swift in Sources */,
 				5D01E6DC28F721DD000A7E6F /* Foundation+.swift in Sources */,
 				5DC1255C28F54F3F004B2BFC /* RecodeListCell.swift in Sources */,
