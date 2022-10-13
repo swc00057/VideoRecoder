@@ -78,6 +78,5 @@ final class PlayBackViewController: UIViewController {
     private func setupNavigation() {
         navigationItem.title = asset.originalFilename
         navigationItem.largeTitleDisplayMode = .never
-        navigationController?.navigationBar.tintColor = .label
     }
 }
