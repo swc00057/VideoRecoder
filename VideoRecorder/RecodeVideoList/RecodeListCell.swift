@@ -111,9 +111,10 @@ final class RecodeListCell: UITableViewCell {
 
     func configure(with asset: PHAsset) {
         representedAssetIdentifier = asset.localIdentifier
-        
-        titleLabel.text = representedAssetIdentifier
+
+        titleLabel.text = asset.originalFilename
         durationLabel.text = asset.duration.displayTime
         dateLabel.text = asset.creationDate?.string()
     }
+
 }

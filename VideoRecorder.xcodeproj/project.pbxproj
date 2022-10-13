@@ -14,6 +14,7 @@
 		0BC8E25728F49724002B0FA3 /* RecodingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25628F49724002B0FA3 /* RecodingViewController.swift */; };
 		0BC8E25A28F497C2002B0FA3 /* PlayBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */; };
 		5D01E6DC28F721DD000A7E6F /* Foundation+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6DB28F721DD000A7E6F /* Foundation+.swift */; };
+		5D01E6DE28F7EFB9000A7E6F /* PhotoKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6DD28F7EFB9000A7E6F /* PhotoKit+.swift */; };
 		5D01E6E228F7F85E000A7E6F /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6E128F7F85E000A7E6F /* PaddingLabel.swift */; };
 		5DC1255C28F54F3F004B2BFC /* RecodeListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1255B28F54F3F004B2BFC /* RecodeListCell.swift */; };
 		5DC1257228F6AD6B004B2BFC /* UIKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1257128F6AD6B004B2BFC /* UIKit+.swift */; };
@@ -31,6 +32,7 @@
 		0BC8E25628F49724002B0FA3 /* RecodingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecodingViewController.swift; sourceTree = "<group>"; };
 		0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayBackViewController.swift; sourceTree = "<group>"; };
 		5D01E6DB28F721DD000A7E6F /* Foundation+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+.swift"; sourceTree = "<group>"; };
+		5D01E6DD28F7EFB9000A7E6F /* PhotoKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhotoKit+.swift"; sourceTree = "<group>"; };
 		5D01E6E128F7F85E000A7E6F /* PaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
 		5DC1255B28F54F3F004B2BFC /* RecodeListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecodeListCell.swift; sourceTree = "<group>"; };
 		5DC1257128F6AD6B004B2BFC /* UIKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+.swift"; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			children = (
 				5DC1257128F6AD6B004B2BFC /* UIKit+.swift */,
 				5D01E6DB28F721DD000A7E6F /* Foundation+.swift */,
+				5D01E6DD28F7EFB9000A7E6F /* PhotoKit+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				6321037828F06E7200CC1609 /* AppDelegate.swift in Sources */,
 				6321037A28F06E7200CC1609 /* SceneDelegate.swift in Sources */,
 				0BC8E25728F49724002B0FA3 /* RecodingViewController.swift in Sources */,
+				5D01E6DE28F7EFB9000A7E6F /* PhotoKit+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
