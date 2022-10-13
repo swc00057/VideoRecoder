@@ -97,9 +97,16 @@
 		0BC8E25B28F4986A002B0FA3 /* extension */ = {
 			isa = PBXGroup;
 			children = (
-				0B1A474128F62F0B008D44C5 /* Double+extension.swift */,
 			);
 			path = extension;
+			sourceTree = "<group>";
+		};
+		0BCA5FA328F83B21003B97B1 /* Extenstions */ = {
+			isa = PBXGroup;
+			children = (
+				0B1A474128F62F0B008D44C5 /* Double+extension.swift */,
+			);
+			path = Extenstions;
 			sourceTree = "<group>";
 		};
 		6321036B28F06E7200CC1609 = {
@@ -127,6 +134,7 @@
 				0BC8E25228F49612002B0FA3 /* RecodeVideoList */,
 				0BC8E25528F496E8002B0FA3 /* VideoRecording */,
 				0BC8E25828F49779002B0FA3 /* PlayBack */,
+				0BCA5FA328F83B21003B97B1 /* Extenstions */,
 				6321037728F06E7200CC1609 /* AppDelegate.swift */,
 				6321037928F06E7200CC1609 /* SceneDelegate.swift */,
 				6321037B28F06E7200CC1609 /* ViewController.swift */,
