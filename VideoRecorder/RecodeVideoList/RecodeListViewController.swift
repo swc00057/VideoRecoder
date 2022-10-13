@@ -56,12 +56,6 @@ final class RecodeListViewController: UIViewController {
         fetchMoreAssets()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        navigationController?.navigationBar.barStyle = .default
-    }
-
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
@@ -175,6 +169,18 @@ extension RecodeListViewController: UITableViewDelegate {
             }
         }
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
+    }
+
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let asset = fetchResult.object(at: indexPath.row)
+        let assetIdentifier = asset.localIdentifier as NSCopying
+        let viewController = PlayBackViewController(with: asset)
+        let configuration = UIContextMenuConfiguration(
+            identifier: assetIdentifier,
+            previewProvider: { viewController },
+            actionProvider: nil
+        )
         return configuration
     }
 }
