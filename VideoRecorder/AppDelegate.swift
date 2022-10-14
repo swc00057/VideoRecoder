@@ -18,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //파이어베이스 초기화
         FirebaseApp.configure()
         
+        UIBarButtonItem.appearance().tintColor = .black
+        
         return true
     }
 
