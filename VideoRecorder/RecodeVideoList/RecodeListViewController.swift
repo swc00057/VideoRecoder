@@ -7,6 +7,7 @@
 
 import UIKit
 import Photos
+import AVKit
 
 final class RecodeListViewController: UIViewController {
 
@@ -39,6 +40,24 @@ final class RecodeListViewController: UIViewController {
         indicator.stopAnimating()
         return indicator
     }()
+    
+    private let playerViewController: AVPlayerViewController = {
+        let controller = AVPlayerViewController()
+        controller.player = AVPlayer()
+        controller.videoGravity = .resizeAspectFill
+        controller.allowsPictureInPicturePlayback = false
+        controller.updatesNowPlayingInfoCenter = false
+        return controller
+    }()
+    
+//    private lazy var playerViewController: AVPlayerViewController = {
+//        let controller = AVPlayerViewController()
+//        controller.player = AVPlayer()
+//        controller.videoGravity = .resizeAspectFill
+//        controller.allowsPictureInPicturePlayback = false
+//        controller.updatesNowPlayingInfoCenter = false
+//        return controller
+//    }()
 
     private let imageManager = PHCachingImageManager()
     private let fetchSize = 6
@@ -52,17 +71,17 @@ final class RecodeListViewController: UIViewController {
 
         setupNavigation()
         setupViews()
-        fetchMoreAssets()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        print("1번뷰 register")
         PHPhotoLibrary.shared().register(self)
+        fetchMoreAssets()
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        PHPhotoLibrary.shared().unregisterChangeObserver(self)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("1번뷰 appear")
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -104,7 +123,7 @@ final class RecodeListViewController: UIViewController {
             activityIndicator.startAnimating()
 
             fetchAssets(limitedBy: fetchLimit) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.activityIndicator.stopAnimating()
                     self.tableView.reloadData()
                     self.isFetching = false
@@ -125,7 +144,10 @@ final class RecodeListViewController: UIViewController {
     private func recordButtonClicked() {
         // TODO: 영상녹화화면으로 이동
         let vc = RecordingViewController()
+        guard navigationController?.topViewController == self else { return }
         self.navigationController?.pushViewController(vc, animated: true)
+//        vc.modalPresentationStyle = .overFullScreen
+//        self.present(vc, animated: true)
     }
 }
 
@@ -154,12 +176,29 @@ extension RecodeListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 
 extension RecodeListViewController: UITableViewDelegate {
+    
+    func setupPlayer(_ asset: PHAsset, completion: @escaping (AVAsset)->() ) {
+        
+        
+        PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { avAsset, _, _ in
+            guard let avAsset = avAsset else { return }
+            let playerItem = AVPlayerItem(asset: avAsset)
+            self.playerViewController.player?.replaceCurrentItem(with: playerItem)
+            completion(avAsset)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
 
         let asset = fetchResult.object(at: indexPath.row)
-        let viewController = PlayBackViewController(with: asset)
-        navigationController?.pushViewController(viewController, animated: true)
+        setupPlayer(asset) { asset in
+            DispatchQueue.main.async {
+                guard self.navigationController?.topViewController == self else { return }
+                let vc = VideoPlayerViewController(asset: asset)
+                self.navigationController?.pushViewController(vc, animated: false)
+            }
+        }
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -183,11 +222,11 @@ extension RecodeListViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let asset = fetchResult.object(at: indexPath.row)
+        var configuration: UIContextMenuConfiguration!
         let assetIdentifier = asset.localIdentifier as NSCopying
-        let viewController = PlayBackViewController(with: asset)
-        let configuration = UIContextMenuConfiguration(
+            configuration = UIContextMenuConfiguration(
             identifier: assetIdentifier,
-            previewProvider: { viewController },
+            previewProvider: { self.playerViewController },
             actionProvider: nil
         )
         return configuration

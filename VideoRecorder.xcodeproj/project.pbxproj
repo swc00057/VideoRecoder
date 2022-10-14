@@ -14,8 +14,10 @@
 		0BC8E25128F4930C002B0FA3 /* FirebaseStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25028F4930C002B0FA3 /* FirebaseStorage.swift */; };
 		0BC8E25428F4968D002B0FA3 /* RecodeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25328F4968D002B0FA3 /* RecodeListViewController.swift */; };
 		0BC8E25728F49724002B0FA3 /* RecordingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25628F49724002B0FA3 /* RecordingViewController.swift */; };
-		0BC8E25A28F497C2002B0FA3 /* PlayBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */; };
 		0BCA5FA628F83CCB003B97B1 /* Double+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA5FA528F83CCB003B97B1 /* Double+extension.swift */; };
+		0BCA5FAF28F8A1B3003B97B1 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA5FAE28F8A1B3003B97B1 /* VideoPlayerViewController.swift */; };
+		0BCA5FB728F8BC7A003B97B1 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA5FB628F8BC7A003B97B1 /* VideoPlayerView.swift */; };
+		0BCA5FBE28F8DC82003B97B1 /* CMTime+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA5FBD28F8DC82003B97B1 /* CMTime+extension.swift */; };
 		5D01E6DC28F721DD000A7E6F /* Foundation+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6DB28F721DD000A7E6F /* Foundation+.swift */; };
 		5D01E6DE28F7EFB9000A7E6F /* PhotoKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6DD28F7EFB9000A7E6F /* PhotoKit+.swift */; };
 		5D01E6E228F7F85E000A7E6F /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01E6E128F7F85E000A7E6F /* PaddingLabel.swift */; };
@@ -35,8 +37,10 @@
 		0BC8E25028F4930C002B0FA3 /* FirebaseStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorage.swift; sourceTree = "<group>"; };
 		0BC8E25328F4968D002B0FA3 /* RecodeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecodeListViewController.swift; sourceTree = "<group>"; };
 		0BC8E25628F49724002B0FA3 /* RecordingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingViewController.swift; sourceTree = "<group>"; };
-		0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayBackViewController.swift; sourceTree = "<group>"; };
 		0BCA5FA528F83CCB003B97B1 /* Double+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+extension.swift"; sourceTree = "<group>"; };
+		0BCA5FAE28F8A1B3003B97B1 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
+		0BCA5FB628F8BC7A003B97B1 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		0BCA5FBD28F8DC82003B97B1 /* CMTime+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMTime+extension.swift"; sourceTree = "<group>"; };
 		5D01E6DB28F721DD000A7E6F /* Foundation+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+.swift"; sourceTree = "<group>"; };
 		5D01E6DD28F7EFB9000A7E6F /* PhotoKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhotoKit+.swift"; sourceTree = "<group>"; };
 		5D01E6E128F7F85E000A7E6F /* PaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
@@ -100,7 +104,8 @@
 		0BC8E25828F49779002B0FA3 /* PlayBack */ = {
 			isa = PBXGroup;
 			children = (
-				0BC8E25928F497C2002B0FA3 /* PlayBackViewController.swift */,
+				0BCA5FAE28F8A1B3003B97B1 /* VideoPlayerViewController.swift */,
+				0BCA5FB628F8BC7A003B97B1 /* VideoPlayerView.swift */,
 			);
 			path = PlayBack;
 			sourceTree = "<group>";
@@ -120,6 +125,7 @@
 				5D01E6DB28F721DD000A7E6F /* Foundation+.swift */,
 				5D01E6DD28F7EFB9000A7E6F /* PhotoKit+.swift */,
 				0BCA5FA528F83CCB003B97B1 /* Double+extension.swift */,
+				0BCA5FBD28F8DC82003B97B1 /* CMTime+extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -240,11 +246,13 @@
 			files = (
 				0B1A474528F638B3008D44C5 /* ImageManager.swift in Sources */,
 				5D01E6E228F7F85E000A7E6F /* PaddingLabel.swift in Sources */,
+				0BCA5FAF28F8A1B3003B97B1 /* VideoPlayerViewController.swift in Sources */,
 				0BC8E25428F4968D002B0FA3 /* RecodeListViewController.swift in Sources */,
 				0BCA5FA628F83CCB003B97B1 /* Double+extension.swift in Sources */,
 				5DC1257228F6AD6B004B2BFC /* UIKit+.swift in Sources */,
-				0BC8E25A28F497C2002B0FA3 /* PlayBackViewController.swift in Sources */,
+				0BCA5FBE28F8DC82003B97B1 /* CMTime+extension.swift in Sources */,
 				5D01E6DC28F721DD000A7E6F /* Foundation+.swift in Sources */,
+				0BCA5FB728F8BC7A003B97B1 /* VideoPlayerView.swift in Sources */,
 				5DC1255C28F54F3F004B2BFC /* RecodeListCell.swift in Sources */,
 				0BC8E25128F4930C002B0FA3 /* FirebaseStorage.swift in Sources */,
 				6321037C28F06E7200CC1609 /* ViewController.swift in Sources */,

@@ -32,28 +32,6 @@ class RecordingViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupSession()
-        // Do any additional setup after loading the view.
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.requestCameraAuthorization()
-    }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        PHPhotoLibrary.shared().unregisterChangeObserver(self)
-    }
-    
-    func setupView() {
-        //videoPreviewLayer의 session을 사용자 지정 세션으로 지정
-        mainView.recordingView.videoPreviewLayer.session = self.captureSession
-        let recordGesture = UITapGestureRecognizer(target: self, action: #selector(recordButtonClicked))
-        mainView.recordButton.addGestureRecognizer(recordGesture)
-        let changeGesture = UITapGestureRecognizer(target: self, action: #selector(changeCamera))
-        mainView.cameraRotateButton.addGestureRecognizer(changeGesture)
-        let albumGesture = UITapGestureRecognizer(target: self, action: #selector(albumButtonClicked))
-        mainView.albumButton.addGestureRecognizer(albumGesture)
-        
         DispatchQueue.main.async {
             self.requestPHPhotoLibraryAuthorization {
                 //사진앨범 권한이 있을 경우
@@ -68,6 +46,23 @@ class RecordingViewController: UIViewController {
                 
             }
         }
+        // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.requestCameraAuthorization()
+    }
+    
+    func setupView() {
+        //videoPreviewLayer의 session을 사용자 지정 세션으로 지정
+        mainView.recordingView.videoPreviewLayer.session = self.captureSession
+        let recordGesture = UITapGestureRecognizer(target: self, action: #selector(recordButtonClicked))
+        mainView.recordButton.addGestureRecognizer(recordGesture)
+        let changeGesture = UITapGestureRecognizer(target: self, action: #selector(changeCamera))
+        mainView.cameraRotateButton.addGestureRecognizer(changeGesture)
+        let albumGesture = UITapGestureRecognizer(target: self, action: #selector(albumButtonClicked))
+        mainView.albumButton.addGestureRecognizer(albumGesture)
         
     }
     
@@ -254,6 +249,7 @@ class RecordingViewController: UIViewController {
             switch status {
             case .authorized:
                 PHPhotoLibrary.shared().register(self)
+                print("2번뷰 register")
                 completion()
             case .denied:
                 DispatchQueue.main.async {
