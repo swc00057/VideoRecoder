@@ -170,22 +170,31 @@ final class RecodeListViewController: UIViewController {
 
     // MARK: Preview
 
-    private func setupPlayer(_ asset: PHAsset, completion: @escaping (AVAsset)->() ) {
+    private func setupPlayer(_ asset: PHAsset, completion: @escaping (AVAsset) -> Void) {
         PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { avAsset, _, _ in
             guard let avAsset = avAsset else { return }
             completion(avAsset)
         }
     }
 
-    private func setupMiniPlayer(_ asset: PHAsset ) {
+    private func setupMiniPlayer(_ asset: PHAsset) {
+        let timescale: CMTimeScale = 600
+        let start = CMTime(value: 0, timescale: timescale)
+        let seconds: Int64 = 5
+        var duration = CMTime(value: Int64(timescale) * seconds, timescale: timescale)
+
         PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { avAsset, _, _ in
             guard let avAsset = avAsset else { return }
 
             DispatchQueue.main.async {
                 let playerItem = AVPlayerItem(asset: avAsset)
                 self.queuePlayer = AVQueuePlayer(items: [playerItem])
-                self.looper = AVPlayerLooper(player: self.queuePlayer!, templateItem: playerItem, timeRange: self.createCMTimeRange(start: 0, end: 3000))
 
+                // 영상의 길이가 5초보다 짧을 경우 영상 길이만큼만 반복
+                duration = CMTimeCompare(avAsset.duration, duration) == 1 ? duration : avAsset.duration
+                let timeRange = CMTimeRangeMake(start: start, duration: duration)
+
+                self.looper = AVPlayerLooper(player: self.queuePlayer!, templateItem: playerItem, timeRange:  timeRange)
                 let playerLayer = AVPlayerLayer(player: self.queuePlayer)
                 playerLayer.videoGravity = .resizeAspectFill
                 self.miniPlayerViewController.view.layer.addSublayer(playerLayer)
@@ -194,12 +203,6 @@ final class RecodeListViewController: UIViewController {
                 self.queuePlayer!.play()
             }
         }
-    }
-    
-    private func createCMTimeRange(start: Int64, end: Int64) -> CMTimeRange {
-        let a: CMTime = CMTime(value: start, timescale: 600)
-        let b: CMTime = CMTime(value: end, timescale: 600)
-        return CMTimeRange(start: a, end: b)
     }
 
     // MARK: Action Handler
