@@ -22,28 +22,28 @@ class VideoPlayerView: UIView {
         return view
     }()
     
-    let viewPlayerDetails: UIView = {
+    let controlView: UIView = {
         let view = UIView()
         view.backgroundColor = .blue
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    let lblCurrentTime: UILabel = {
+    let currentTime: UILabel = {
         let view = UILabel()
         view.text = "00.00"
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    let lblDurationTime: UILabel = {
+    let durationTime: UILabel = {
         let view = UILabel()
         view.text = "00.00"
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    let sliderTime: UISlider = {
+    let timeSlider: UISlider = {
         let view = UISlider()
         view.minimumTrackTintColor = .yellow
         view.maximumTrackTintColor = .darkGray
@@ -52,7 +52,7 @@ class VideoPlayerView: UIView {
         return view
     }()
     
-    let btnMute: UIButton = {
+    let muteButton: UIButton = {
         let view = UIButton()
         view.setImage(UIImage(named: "unmute"), for: .normal)
         view.setImage(UIImage(named: "mute"), for: .selected)
@@ -75,12 +75,12 @@ class VideoPlayerView: UIView {
         addSubview(containerView)
         
         
-        [videoView,viewPlayerDetails].forEach {
+        [videoView,controlView].forEach {
             containerView.addSubview($0)
         }
         
-        [lblCurrentTime,lblDurationTime,sliderTime,btnMute].forEach {
-            viewPlayerDetails.addSubview($0)
+        [currentTime,durationTime,timeSlider,muteButton].forEach {
+            controlView.addSubview($0)
         }
     }
     
@@ -99,25 +99,25 @@ class VideoPlayerView: UIView {
             videoView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             videoView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
-            viewPlayerDetails.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            viewPlayerDetails.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            viewPlayerDetails.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            viewPlayerDetails.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.3),
+            controlView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            controlView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            controlView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            controlView.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.3),
             
-            lblCurrentTime.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            lblCurrentTime.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
+            currentTime.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+            currentTime.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
             
-            lblDurationTime.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
-            lblDurationTime.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
+            durationTime.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+            durationTime.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
             
-            btnMute.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
-            btnMute.bottomAnchor.constraint(equalTo: lblCurrentTime.topAnchor, constant: -8),
-            btnMute.widthAnchor.constraint(equalToConstant: 33),
-            btnMute.heightAnchor.constraint(equalToConstant: 33),
+            muteButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+            muteButton.bottomAnchor.constraint(equalTo: currentTime.topAnchor, constant: -8),
+            muteButton.widthAnchor.constraint(equalToConstant: 33),
+            muteButton.heightAnchor.constraint(equalToConstant: 33),
             
-            sliderTime.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            sliderTime.trailingAnchor.constraint(equalTo: btnMute.leadingAnchor, constant: -8),
-            sliderTime.bottomAnchor.constraint(equalTo: lblCurrentTime.topAnchor, constant: -8),
+            timeSlider.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+            timeSlider.trailingAnchor.constraint(equalTo: muteButton.leadingAnchor, constant: -8),
+            timeSlider.bottomAnchor.constraint(equalTo: currentTime.topAnchor, constant: -8),
             
             
             
