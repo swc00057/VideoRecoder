@@ -62,7 +62,15 @@ final class RecodeListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        PHPhotoLibrary.shared().register(self)
+
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
+            if status == .authorized {
+                PHPhotoLibrary.shared().register(self)
+
+                guard let album = self.album else { return }
+                self.fetchAssets(in: album, limitedBy: self.fetchLimit)
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -138,7 +146,7 @@ final class RecodeListViewController: UIViewController {
     private func fetchAssets(
         in assetCollection: PHAssetCollection,
         limitedBy limit: Int,
-        completion: (() -> Void)?
+        completion: (() -> Void)? = nil
     ) {
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -228,11 +236,12 @@ extension RecodeListViewController: UITableViewDelegate {
 
 extension RecodeListViewController: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
-        DispatchQueue.main.sync {
-            guard let fetchResult = self.fetchResult,
-                  let details = changeInstance.changeDetails(for: fetchResult) else { return }
+        guard let fetchResult = fetchResult,
+              let details = changeInstance.changeDetails(for: fetchResult) else { return }
 
-            self.fetchResult = details.fetchResultAfterChanges
+        fetchResult = details.fetchResultAfterChanges
+
+        DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
