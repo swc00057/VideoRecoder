@@ -28,7 +28,7 @@ class RecordingView: UIView {
     
     let albumButton: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "01")
+        view.tintColor = .white
         view.isUserInteractionEnabled = true
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
