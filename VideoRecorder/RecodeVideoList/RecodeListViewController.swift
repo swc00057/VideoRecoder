@@ -207,10 +207,12 @@ extension RecodeListViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: false)
         
         let asset = fetchResult.object(at: indexPath.row)
+        let fileName = asset.originalFilename
         setupPlayer(asset) { asset in
             DispatchQueue.main.async {
                 guard self.navigationController?.topViewController == self else { return }
                 let vc = VideoPlayerViewController(asset: asset)
+                vc.fileName = fileName
                 self.navigationController?.pushViewController(vc, animated: false)
             }
         }

@@ -24,6 +24,7 @@ final class VideoPlayerViewController: UIViewController {
     private var timer: Timer?
     var orientation: NSLayoutConstraint?
     var asset: AVAsset
+    var fileName = "비디오"
     
     private let activityIndicatorView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView()
@@ -95,7 +96,7 @@ final class VideoPlayerViewController: UIViewController {
     }
     
     private func setupNavigation() {
-        navigationItem.title = "asset.originalFilename"
+        navigationItem.title = fileName
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.tintColor = .label
     }
