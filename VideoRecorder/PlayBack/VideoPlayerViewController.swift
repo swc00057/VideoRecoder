@@ -36,7 +36,6 @@ final class VideoPlayerViewController: UIViewController {
     
     private lazy var pausePlayButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = .black
         let image = UIImage(named: "ic_Play")
         button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
