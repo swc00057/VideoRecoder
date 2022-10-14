@@ -260,6 +260,9 @@ extension RecodeListViewController: UITableViewDelegate {
                 }
             }
         }
+        DispatchQueue.global(qos: .background).async {
+            FirebaseStorage.shared.delete(fileName: asset.originalFilename)
+        }
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
     }
