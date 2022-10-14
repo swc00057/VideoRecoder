@@ -10,7 +10,23 @@ import Photos
 
 final class RecodeListCell: UITableViewCell {
 
+    // MARK: Constant
+
     static let reuseIdentifier = String(describing: RecodeListCell.self)
+
+    private enum Metrics {
+        static let spacing: CGFloat = 8
+        static let labelInset: UIEdgeInsets = .init(top: 0, left: 5, bottom: 0, right: 5)
+        static let cornerRadius: CGFloat = 5
+    }
+
+    private enum Font {
+        static let durationLabel: UIFont = .preferredFont(forTextStyle: .caption1)
+        static let titleLabel: UIFont = .preferredFont(forTextStyle: .headline)
+        static let dateLabel: UIFont = .preferredFont(forTextStyle: .subheadline)
+    }
+
+    // MARK: UI
 
     private let containerStackView: UIStackView = {
         let stackView = UIStackView()
@@ -18,28 +34,21 @@ final class RecodeListCell: UITableViewCell {
         stackView.axis = .horizontal
         stackView.distribution = .fill
         stackView.alignment = .bottom // TODO: 두 열 중 길이가 짧은 열의 아래쪽으로 새로운 영상을 배치합니다.
-        stackView.spacing = 8
+        stackView.spacing = Metrics.spacing
         return stackView
     }()
 
     private let durationLabel: UILabel = {
-        let inset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+        let inset = Metrics.labelInset
         let label = PaddingLabel(padding: inset)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .caption1)
+        label.font = Font.durationLabel
         label.textColor = .systemBackground
         label.backgroundColor = .label.withAlphaComponent(0.5)
         label.adjustsFontForContentSizeCategory = true
         label.layer.masksToBounds = true
-        label.layer.cornerRadius = 5
+        label.layer.cornerRadius = Metrics.cornerRadius
         return label
-    }()
-
-    let thumbnailImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.layer.cornerRadius = 10
-        imageView.layer.masksToBounds = true
-        return imageView
     }()
 
     private let labelStackView: UIStackView = {
@@ -47,13 +56,13 @@ final class RecodeListCell: UITableViewCell {
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .fill
-        stackView.spacing = 8
+        stackView.spacing = Metrics.spacing
         return stackView
     }()
 
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .headline)
+        label.font = Font.titleLabel
         label.textColor = .label
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
@@ -62,14 +71,25 @@ final class RecodeListCell: UITableViewCell {
 
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .subheadline)
+        label.font = Font.dateLabel
         label.textColor = .secondaryLabel
         label.adjustsFontForContentSizeCategory = true
         label.setContentCompressionResistancePriority(.defaultHigh + 1, for: .vertical)
         return label
     }()
 
+    let thumbnailImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = Metrics.cornerRadius
+        imageView.layer.masksToBounds = true
+        return imageView
+    }()
+
+    // MARK: Properties
+
     private(set) var representedAssetIdentifier: String!
+
+    // MARK: Init
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -80,6 +100,8 @@ final class RecodeListCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: Layout
 
     private func setupViews() {
         contentView.addSubview(containerStackView)
