@@ -7,9 +7,11 @@
 
 import UIKit
 
-class VideoPlayerView: UIView {
+final class VideoPlayerView: UIView {
+
+    // MARK: UI
     
-    let containerView: UIView = {
+    private let containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -63,9 +65,12 @@ class VideoPlayerView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+
+    // MARK: Init
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+
         setupView()
         setupConstraints()
     }
@@ -73,33 +78,24 @@ class VideoPlayerView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    
-    func setupView() {
-        
+
+    // MARK: Layout
+
+    private func setupView() {
         addSubview(containerView)
-        
-        
-        [videoView,controlView].forEach {
-            containerView.addSubview($0)
-        }
-        
-        [currentTime,durationTime,timeSlider,muteButton].forEach {
-            controlView.addSubview($0)
-        }
+        [videoView, controlView].forEach { containerView.addSubview($0) }
+        [currentTime, durationTime, timeSlider, muteButton].forEach { controlView.addSubview($0) }
     }
     
-    func setupConstraints() {
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             
-            
-            
-            containerView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor),
-            containerView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
-            containerView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
-            
-            videoView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             videoView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            videoView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             videoView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             videoView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
@@ -117,15 +113,12 @@ class VideoPlayerView: UIView {
             muteButton.trailingAnchor.constraint(equalTo: controlView.trailingAnchor, constant: -20),
             muteButton.bottomAnchor.constraint(equalTo: currentTime.topAnchor, constant: -8),
             muteButton.widthAnchor.constraint(equalToConstant: 33),
-            muteButton.heightAnchor.constraint(equalToConstant: 33),
+            muteButton.heightAnchor.constraint(equalTo: muteButton.widthAnchor),
             
             timeSlider.leadingAnchor.constraint(equalTo: controlView.leadingAnchor, constant: 20),
             timeSlider.trailingAnchor.constraint(equalTo: muteButton.leadingAnchor, constant: -8),
             timeSlider.bottomAnchor.constraint(equalTo: currentTime.topAnchor, constant: -8),
-            
-            
-            
         ])
     }
-}
 
+}
