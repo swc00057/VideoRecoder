@@ -26,8 +26,13 @@
 
 ### dahee
 
-- ㅇㅇㅇ
-  - ㅇㅇㅇ
+- 녹화 영상 목록 화면
+  -   테이블뷰 디자인 및 레이아웃 구현 
+  -   테이블뷰 Swipe Action 구현
+  -   테이블뷰 Context Menu 구현
+  -   Pagination 구현
+- 영상 재생 화면
+    - 선택된 영상을 보여주는 뷰와 영상 컨트롤러 구현 (AVPlayerViewController 활용)
 
 
 
@@ -48,4 +53,22 @@
 
 ### dahee
 
-- ㅇㅇㅇ
+- 녹화 영상 목록 화면
+
+    - UITableViewDelegate 프로토콜을 사용하여 정말 다양한 기능을 관리할 수 있다는 것을 알 수 있었다. 앱 개발에 있어서 테이블뷰 사용 빈도가 높음에도 불구하고 Delegate 문서를 전반적으로 훑어보지 않고 그때 그때 필요한 기능만 찾아 구현했었다. 편의를 위해 이미 만들어진 기능이 있음에도 불구하고 알지 못해서 이를 잘 활용하지 못했었는데, 이번 프로젝트를 통해 관련 문서를 전반적으로 읽고 제공되는 메서드들에 대해 알게되어서 앞으로 테이블뷰를 더 잘 활용할 수 있겠다는 생각이 들었다. 
+    - PHPhotoLibrary 권한을 요청하거나 앨범이 존재하는지 확인하고 앨범의 비디오들을 불러오는 코드들이 영상 녹화 화면에 중복되어 있는데 별도로 분리해서 중복 코드를 제거하도록 개선하면 좋을 것 같다. 
+
+- 영상 재생 화면
+
+    - ContainerViewController(VideoPlayerViewController)에서 AVPlayerViewController를 childViewController로 설정하도록 구현했는데 VideoPlayerViewController가 화면에서 사라질 때 아래와 같은 문제가 발생했었다.
+
+        ```swift
+        Cannot remove an observer <NSKeyValueObservance 0x2831ba430> for the key path \"currentItem.forwardPlaybackEndTime\" from <AVPlayer 0x283c82920>, 
+        most likely because the value for the key \"currentItem\" has changed without an appropriate KVO notification being sent. 
+        Check the KVO-compliance of the AVPlayer class."
+        ```
+
+    - VideoPlayerViewController가 화면에서 사라질 때 AVPlayerViewController가 내부적으로 등록한 Observer를 제거하지 않은채 뷰 계층에서 제거되어서 발생하는 문제인줄 알았으나 화면에서 사라질 때 Observer을 제거해주어도 계속해서 동일한 문제가 발생했다.
+
+    - 결국 원인을 찾지 못해 커스텀 뷰에 AVPlayerLayer를 이용하는 방법으로 수정했는데, AVPlayerViewController의 AVPlayer가 deinit되지 않는 것까지 확인하고 추후 시간적 여유가 될때 메모리 할당에 대해 알아보고 원인을 알아봐야겠다.
+
