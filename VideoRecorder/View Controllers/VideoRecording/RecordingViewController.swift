@@ -31,6 +31,7 @@ class RecordingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        setupObsever()
         setupSession()
         DispatchQueue.main.async {
             self.requestPHPhotoLibraryAuthorization {
@@ -64,6 +65,19 @@ class RecordingViewController: UIViewController {
         let albumGesture = UITapGestureRecognizer(target: self, action: #selector(albumButtonClicked))
         mainView.albumButton.addGestureRecognizer(albumGesture)
         
+    }
+    
+    //백그라운드 상태 돌입 상태 옵저버
+    func setupObsever() {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(enterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+    
+    //백그라운드 상태 진입 시 타이머 및 녹화 버튼 초기화
+    @objc func enterBackground() {
+        
+        stopTimer()
+        mainView.recordButton.isEnabled = false
     }
     
     //버튼 클릭 시 isEnabled 값을 변경 true <-> false, 값에 따라 녹화 시작 or 종료
