@@ -41,6 +41,8 @@ final class RecodeListViewController: UIViewController {
         button.tintColor = .systemPurple
         return button
     }()
+
+    private lazy var miniPlayerViewController = UIViewController()
     
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
@@ -49,8 +51,6 @@ final class RecodeListViewController: UIViewController {
         indicator.stopAnimating()
         return indicator
     }()
-    
-    private let miniPlayerViewController = UIViewController()
 
     // MARK: Properties
 
@@ -59,7 +59,7 @@ final class RecodeListViewController: UIViewController {
     private var fetchLimit = 0
     private var isFetching: Bool = false
 
-    // Fetch Videos
+    // Asset
     private let imageManager = PHCachingImageManager()
     private let albumTitle = "MyVideos"
     private var fetchResult: PHFetchResult<PHAsset>?
@@ -112,7 +112,7 @@ final class RecodeListViewController: UIViewController {
         ])
     }
 
-    // MARK: Pagination & Fetch Videos
+    // MARK: Pagination
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let album = album else { return }
@@ -125,6 +125,8 @@ final class RecodeListViewController: UIViewController {
             fetchMoreAssets(in: album)
         }
     }
+
+    // MARK: Asset
 
     /// Fetching Asset Collection for specific `albumTitle`
     private func fetchAssetCollection(
@@ -146,7 +148,7 @@ final class RecodeListViewController: UIViewController {
             activityIndicator.startAnimating()
 
             fetchAssets(in: assetCollection, limitedBy: fetchLimit) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.activityIndicator.stopAnimating()
                     self.tableView.reloadData()
                     self.isFetching = false
@@ -166,6 +168,21 @@ final class RecodeListViewController: UIViewController {
         options.fetchLimit = limit
         fetchResult = PHAsset.fetchAssets(in: assetCollection, options: options)
         completion?()
+    }
+
+    private func delete(_ asset: PHAsset) {
+        PHPhotoLibrary.shared().performChanges({
+            PHAssetChangeRequest.deleteAssets([asset] as NSArray)
+        }) { success, error in
+            if success {
+                // asset을 성공적으로 삭제했을경우 백업된 영상도 삭제
+                DispatchQueue.global(qos: .background).async {
+                    FirebaseStorage.shared.delete(fileName: asset.originalFilename)
+                }
+            } else {
+                print("Can't remove the asset: \(String(describing: error))")
+            }
+        }
     }
 
     // MARK: Preview
@@ -229,7 +246,6 @@ extension RecodeListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         guard let asset = fetchResult?.object(at: indexPath.row) else { return cell }
-
         cell.configure(with: asset)
         imageManager.requestImage(for: asset, targetSize: Metrics.thumbnailSize, contentMode: .aspectFill, options: nil) { image, _ in
             if cell.representedAssetIdentifier == asset.localIdentifier {
@@ -263,20 +279,9 @@ extension RecodeListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let asset = fetchResult?.object(at: indexPath.row) else { return nil }
-
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, _ in
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.deleteAssets([asset] as NSArray)
-            }) { success, error in
-                if success {
-                    print("Remove the asset: \(String(describing: asset.localIdentifier))")
-                } else {
-                    print("Can't remove the asset: \(String(describing: error))")
-                }
-            }
-        }
-        DispatchQueue.global(qos: .background).async {
-            FirebaseStorage.shared.delete(fileName: asset.originalFilename)
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, _ in
+            guard let self = self else { return }
+            self.delete(asset)
         }
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
@@ -284,12 +289,9 @@ extension RecodeListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let asset = fetchResult?.object(at: indexPath.row) else { return nil }
-
         setupMiniPlayer(asset)
-        var configuration: UIContextMenuConfiguration!
-        let assetIdentifier = asset.localIdentifier as NSCopying
-        configuration = UIContextMenuConfiguration(
-            identifier: assetIdentifier,
+        let configuration = UIContextMenuConfiguration(
+            identifier: nil,
             previewProvider: { self.miniPlayerViewController },
             actionProvider: nil
         )
