@@ -116,12 +116,14 @@ class RecordingViewController: UIViewController {
     
     //녹화 시작
     private func startRecording() {
+        mainView.cameraRotateButton.isUserInteractionEnabled = false
         outputURL = tempURL()
         startTimer()
         videoOutput.startRecording(to: outputURL!, recordingDelegate: self)
     }
     //녹화 종료
     private func stopRecording() {
+        mainView.cameraRotateButton.isUserInteractionEnabled = true
         if videoOutput.isRecording {
             stopTimer()
             videoOutput.stopRecording()

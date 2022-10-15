@@ -95,7 +95,7 @@ class RecordingView: UIView {
             controlView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 32),
             controlView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -32),
             controlView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -32),
-            controlView.heightAnchor.constraint(equalTo: heightAnchor , multiplier: 0.15),
+            controlView.heightAnchor.constraint(equalTo: heightAnchor , multiplier: 0.20),
             
             albumButton.leadingAnchor.constraint(equalTo: controlView.leadingAnchor, constant: 32),
             albumButton.centerYAnchor.constraint(equalTo: controlView.centerYAnchor),
@@ -108,7 +108,7 @@ class RecordingView: UIView {
             recordButton.heightAnchor.constraint(equalToConstant: 54),
             
             timerLabel.centerXAnchor.constraint(equalTo: controlView.centerXAnchor),
-            timerLabel.topAnchor.constraint(equalTo: recordButton.bottomAnchor, constant: 6),
+            timerLabel.topAnchor.constraint(equalTo: recordButton.bottomAnchor, constant: 4),
             
             cameraRotateButton.trailingAnchor.constraint(equalTo: controlView.trailingAnchor, constant: -32),
             cameraRotateButton.centerYAnchor.constraint(equalTo: controlView.centerYAnchor),
