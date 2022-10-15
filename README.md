@@ -29,6 +29,8 @@
   - 영상 5초 미리 보기 재생 구현
 - 영상 재생 화면
   - 커스텀 비디오 뷰 
+- Firebase
+  - firebase 기본 설정 및 Storage CRUD 
 
 ### dahee
 
