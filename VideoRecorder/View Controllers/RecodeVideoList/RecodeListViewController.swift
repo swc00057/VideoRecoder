@@ -60,7 +60,6 @@ final class RecodeListViewController: UIViewController {
     private var isFetching: Bool = false
 
     // Asset
-    private let imageManager = PHCachingImageManager()
     private let albumTitle = "MyVideos"
     private var fetchResult: PHFetchResult<PHAsset>?
     private var album: PHAssetCollection?
@@ -247,7 +246,7 @@ extension RecodeListViewController: UITableViewDataSource {
         }
         guard let asset = fetchResult?.object(at: indexPath.row) else { return cell }
         cell.configure(with: asset)
-        imageManager.requestImage(for: asset, targetSize: Metrics.thumbnailSize, contentMode: .aspectFill, options: nil) { image, _ in
+        ImageManager.shared.requestImage(from: asset, thumnailSize: Metrics.thumbnailSize) { image in
             if cell.representedAssetIdentifier == asset.localIdentifier {
                 cell.thumbnailImageView.image = image
             }
